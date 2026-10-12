@@ -220,5 +220,5 @@ In Handballmannschaften spielen oft **Minderjährige**. Die Technik ist darauf a
 - **Passwort vergessen** und **Einladungs-Mails** gibt es noch nicht. Mitglieder werden über die E-Mail eines bestehenden Kontos hinzugefügt.
 - Pro Konto wird die **erste** Mannschaft verwendet. Das Datenmodell unterstützt mehrere Mannschaften, Aufstellungen und Trainer:innen; ein Teamwechsler in der Oberfläche fehlt noch.
 - Wer gleichzeitig mit einem anderen Gerät dasselbe Spielerprofil bearbeitet, überschreibt dessen Änderungen („last write wins“). Für die Aufstellung gilt das nicht, dort sorgt die Zeilensperre für Konsistenz.
-- **End-to-End-Tests im Browser** (Playwright) sind noch nicht eingerichtet. Die zentralen Abläufe decken die Unit- und Integrationstests ab; die Bedienung wurde zusätzlich manuell im Browser geprüft (siehe Übergabeprotokoll).
+- **End-to-End-Tests im Browser** (Playwright) sind noch nicht eingerichtet. Die zentralen Abläufe decken die Unit- und Integrationstests ab. Die Bedienung im Browser mit echter Datenbank (inkl. Tablet-Ansicht) steht noch aus.
 - `next.config.ts`: `cacheComponents` ist **aus**. Alle Seiten sind personalisiert, die Daten kommen über Supabase im Client mit Echtzeit-Abgleich. Das vermeidet Suspense-Pflichten für jede Seite mit Anmeldung.
