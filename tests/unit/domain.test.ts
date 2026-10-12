@@ -5,6 +5,18 @@ import { FIELD_POSITIONS, FIELD_POSITION_CODES } from "@/lib/domain/positions";
 import { MOTIVATION, MOTIVATION_STATUSES } from "@/lib/domain/motivation";
 import { rowsToLineupState } from "@/lib/data/lineup";
 import { cleanEnvValue } from "@/lib/supabase/env";
+import { sortNotes } from "@/lib/data/notes";
+
+describe("sortNotes", () => {
+  it("zeigt die neueste Notiz zuerst (Datum, dann Erfassungszeit)", () => {
+    const sorted = sortNotes([
+      { id: "a", note_date: "2026-09-01", created_at: "2026-10-01T10:00:00Z" },
+      { id: "b", note_date: "2026-10-12", created_at: "2026-10-12T08:00:00Z" },
+      { id: "c", note_date: "2026-10-12", created_at: "2026-10-12T09:00:00Z" },
+    ]);
+    expect(sorted.map((n) => n.id)).toEqual(["c", "b", "a"]);
+  });
+});
 
 describe("cleanEnvValue", () => {
   it("entfernt BOM, Zero-Width-Zeichen und Leerraum", () => {

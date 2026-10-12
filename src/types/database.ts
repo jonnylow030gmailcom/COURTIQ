@@ -90,6 +90,19 @@ export type Database = {
         Update: { name?: string; is_active?: boolean };
         Relationships: [];
       };
+      player_notes: {
+        Row: {
+          id: string;
+          team_id: string;
+          player_id: string;
+          author_id: string | null;
+          note_date: string;
+          body: string;
+        } & Timestamps;
+        Insert: { id?: string; team_id: string; player_id: string; note_date: string; body: string; author_id?: string };
+        Update: { note_date?: string; body?: string };
+        Relationships: [];
+      };
       lineup_positions: {
         Row: {
           id: string;

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
@@ -41,11 +41,11 @@ import { PhotoField } from "./photo-field";
 const SECTIONS = [
   { id: "stammdaten", label: "Stammdaten" },
   { id: "positionen", label: "Positionen" },
-  { id: "staerken", label: "Stärken & Schwächen" },
+  { id: "staerken", label: "StÃ¤rken & SchwÃ¤chen" },
   { id: "angriff", label: "Angriff" },
   { id: "abwehr", label: "Abwehr" },
   { id: "motivation", label: "Motivation" },
-  { id: "notizen", label: "Notizen" },
+  { id: "notizen", label: "Allgemeine Notizen" },
 ] as const;
 
 function FormSection({ id, title, description, children }: { id: string; title: string; description?: string; children: ReactNode }) {
@@ -87,14 +87,14 @@ export function PlayerForm({ player }: { player?: PlayerRow }) {
         const saved = player ? await updatePlayer(player.id, values, photo) : await createPlayer(values, photo);
         reset(toPlayerFormValues(saved));
         setPhoto({ kind: "keep" });
-        toast.success(isEdit ? "Änderungen gespeichert." : `${saved.first_name} ${saved.last_name} wurde angelegt.`);
+        toast.success(isEdit ? "Ã„nderungen gespeichert." : `${saved.first_name} ${saved.last_name} wurde angelegt.`);
         router.push(`/spieler/${saved.id}`);
       } catch (error) {
         setSubmitError(toUserMessage(error, "Der Spieler konnte nicht gespeichert werden."));
       }
     },
     () => {
-      setSubmitError("Bitte die markierten Felder prüfen.");
+      setSubmitError("Bitte die markierten Felder prÃ¼fen.");
       requestAnimationFrame(() => document.querySelector<HTMLElement>("[aria-invalid='true']")?.focus());
     },
   );
@@ -154,10 +154,10 @@ export function PlayerForm({ player }: { player?: PlayerRow }) {
             <FormField id="birth_date" label="Geburtsdatum" hint="Das Alter wird automatisch berechnet." error={err("birth_date")}>
               <Input id="birth_date" type="date" max={todayIso()} min="1900-01-01" className="h-10" {...aria("birth_date")} {...register("birth_date")} />
             </FormField>
-            <FormField id="jersey_number" label="Trikotnummer" hint="Optional, 0–99" error={err("jersey_number")}>
+            <FormField id="jersey_number" label="Trikotnummer" hint="Optional, 0â€“99" error={err("jersey_number")}>
               <Input id="jersey_number" inputMode="numeric" className="h-10" {...aria("jersey_number")} {...register("jersey_number")} />
             </FormField>
-            <FormField id="height_cm" label="Größe (cm)" hint="Optional" error={err("height_cm")}>
+            <FormField id="height_cm" label="GrÃ¶ÃŸe (cm)" hint="Optional" error={err("height_cm")}>
               <Input id="height_cm" inputMode="numeric" className="h-10" {...aria("height_cm")} {...register("height_cm")} />
             </FormField>
             <FormField id="throwing_hand" label="Wurfhand" hint="Optional" error={err("throwing_hand")}>
@@ -179,7 +179,7 @@ export function PlayerForm({ player }: { player?: PlayerRow }) {
               <option value="">Noch offen</option>
               {FIELD_POSITIONS.map((p) => (
                 <option key={p.code} value={p.code}>
-                  {p.code} – {p.label}
+                  {p.code} â€“ {p.label}
                 </option>
               ))}
             </NativeSelect>
@@ -229,10 +229,10 @@ export function PlayerForm({ player }: { player?: PlayerRow }) {
           />
         </FormSection>
 
-        <FormSection id="staerken" title="Stärken & Schwächen" description="Stichworte für den schnellen Überblick, Freitext für ausführliche Beobachtungen.">
+        <FormSection id="staerken" title="StÃ¤rken & SchwÃ¤chen" description="Stichworte fÃ¼r den schnellen Ãœberblick, Freitext fÃ¼r ausfÃ¼hrliche Beobachtungen.">
           <div className="grid gap-5 xl:grid-cols-2">
             <div className="grid gap-3">
-              <FormField id="strengths" label="Stärken (Stichworte)" error={err("strengths")}>
+              <FormField id="strengths" label="StÃ¤rken (Stichworte)" error={err("strengths")}>
                 <Controller
                   control={control}
                   name="strengths"
@@ -241,21 +241,21 @@ export function PlayerForm({ player }: { player?: PlayerRow }) {
                   )}
                 />
               </FormField>
-              <FormField id="strengths_notes" label="Stärken – Notizen" error={err("strengths_notes")}>
+              <FormField id="strengths_notes" label="StÃ¤rken â€“ Notizen" error={err("strengths_notes")}>
                 <Textarea id="strengths_notes" rows={5} {...register("strengths_notes")} />
               </FormField>
             </div>
             <div className="grid gap-3">
-              <FormField id="weaknesses" label="Schwächen (Stichworte)" error={err("weaknesses")}>
+              <FormField id="weaknesses" label="SchwÃ¤chen (Stichworte)" error={err("weaknesses")}>
                 <Controller
                   control={control}
                   name="weaknesses"
                   render={({ field }) => (
-                    <TagInput id="weaknesses" value={field.value} onChange={field.onChange} suggestions={TAG_SUGGESTIONS.weaknesses} placeholder="z. B. Rückzugsverhalten" />
+                    <TagInput id="weaknesses" value={field.value} onChange={field.onChange} suggestions={TAG_SUGGESTIONS.weaknesses} placeholder="z. B. RÃ¼ckzugsverhalten" />
                   )}
                 />
               </FormField>
-              <FormField id="weaknesses_notes" label="Schwächen – Notizen" error={err("weaknesses_notes")}>
+              <FormField id="weaknesses_notes" label="SchwÃ¤chen â€“ Notizen" error={err("weaknesses_notes")}>
                 <Textarea id="weaknesses_notes" rows={5} {...register("weaknesses_notes")} />
               </FormField>
             </div>
@@ -305,16 +305,20 @@ export function PlayerForm({ player }: { player?: PlayerRow }) {
             name="motivation_status"
             render={({ field }) => <MotivationPicker value={field.value} onChange={field.onChange} disabled={isSubmitting} />}
           />
-          <FormField id="motivation_note" label="Begründung (optional)" error={err("motivation_note")}>
+          <FormField id="motivation_note" label="BegrÃ¼ndung (optional)" error={err("motivation_note")}>
             <Textarea id="motivation_note" rows={3} {...register("motivation_note")} />
           </FormField>
         </FormSection>
 
-        <FormSection id="notizen" title="Trainer-Notizen">
-          <FormField id="coach_notes" label="Individuelle Hinweise für das Trainerteam" error={err("coach_notes")}>
+        <FormSection
+          id="notizen"
+          title="Allgemeine Notizen"
+          description="Datierte Trainer-Notizen erfasst du direkt im Spielerprofil â€“ dort bleiben alle EintrÃ¤ge mit Datum sichtbar."
+        >
+          <FormField id="coach_notes" label="Individuelle Hinweise fÃ¼r das Trainerteam" error={err("coach_notes")}>
             <Textarea id="coach_notes" rows={5} {...register("coach_notes")} />
           </FormField>
-          <FormField id="general_notes" label="Allgemeine Notizen" error={err("general_notes")}>
+          <FormField id="general_notes" label="Allgemein" error={err("general_notes")}>
             <Textarea id="general_notes" rows={5} {...register("general_notes")} />
           </FormField>
         </FormSection>
@@ -325,9 +329,9 @@ export function PlayerForm({ player }: { player?: PlayerRow }) {
             {submitError ? (
               <span className="font-medium text-destructive">{submitError}</span>
             ) : hasChanges ? (
-              <span className="text-muted-foreground">Ungespeicherte Änderungen</span>
+              <span className="text-muted-foreground">Ungespeicherte Ã„nderungen</span>
             ) : (
-              <span className="text-muted-foreground">{isEdit ? "Keine Änderungen" : "Neuer Spieler"}</span>
+              <span className="text-muted-foreground">{isEdit ? "Keine Ã„nderungen" : "Neuer Spieler"}</span>
             )}
           </p>
           <div className="flex gap-2">
@@ -336,7 +340,7 @@ export function PlayerForm({ player }: { player?: PlayerRow }) {
             </Button>
             <Button type="submit" disabled={isSubmitting || (isEdit && !hasChanges)} className="flex-1 sm:flex-none">
               {isSubmitting ? <Loader2 className="animate-spin" /> : <Save />}
-              {isSubmitting ? (photo.kind === "replace" ? "Foto wird hochgeladen…" : "Wird gespeichert…") : isEdit ? "Speichern" : "Spieler anlegen"}
+              {isSubmitting ? (photo.kind === "replace" ? "Foto wird hochgeladenâ€¦" : "Wird gespeichertâ€¦") : isEdit ? "Speichern" : "Spieler anlegen"}
             </Button>
           </div>
         </div>
@@ -345,7 +349,7 @@ export function PlayerForm({ player }: { player?: PlayerRow }) {
       <AlertDialog open={confirmCancel} onOpenChange={setConfirmCancel}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Änderungen verwerfen?</AlertDialogTitle>
+            <AlertDialogTitle>Ã„nderungen verwerfen?</AlertDialogTitle>
             <AlertDialogDescription>Die ungespeicherten Eingaben gehen dabei verloren.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

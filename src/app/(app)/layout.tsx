@@ -8,7 +8,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   const session = await requireAppSession();
 
   return (
-    <TeamDataProvider key={session.team.id} team={session.team}>
+    <TeamDataProvider key={session.team.id} team={session.team} currentUserId={session.userId}>
       <AppShell displayName={session.displayName}>
         <TeamDataGate>{children}</TeamDataGate>
       </AppShell>

@@ -8,7 +8,7 @@ import {
   Camera,
   ChevronDown,
   LayoutGrid,
-  NotebookPen,
+  StickyNote,
   Pencil,
   Shield,
   Sparkles,
@@ -47,6 +47,7 @@ import { MotivationPicker } from "./motivation-picker";
 import { PositionBadge } from "./position-badge";
 import { PhotoField } from "./photo-field";
 import { DeletePlayerDialog } from "./delete-player-dialog";
+import { TrainerNotes } from "./trainer-notes";
 
 function Section({ icon, title, children, action }: { icon: ReactNode; title: string; children: ReactNode; action?: ReactNode }) {
   return (
@@ -351,9 +352,9 @@ function ProfileContent({
           )}
         </Section>
 
-        <Section icon={<NotebookPen className="size-4" />} title="Trainer-Notizen">
+        <Section icon={<StickyNote className="size-4" />} title="Allgemeine Notizen">
           {!player.coach_notes && !player.general_notes ? (
-            <Empty>Noch keine Notizen.</Empty>
+            <Empty>Noch keine allgemeinen Notizen.</Empty>
           ) : (
             <div className="space-y-4">
               {player.coach_notes && (
@@ -372,6 +373,8 @@ function ProfileContent({
           )}
         </Section>
       </div>
+
+      <TrainerNotes playerId={player.id} />
 
       <p className="text-xs text-muted-foreground">
         Angelegt am {formatDateTime(player.created_at)} · zuletzt geändert am {formatDateTime(player.updated_at)}

@@ -29,6 +29,7 @@ interface TeamInfo {
 
 interface TeamDataContextValue {
   team: TeamInfo;
+  currentUserId: string;
   canEdit: boolean;
   status: "loading" | "ready" | "error";
   loadError: string | null;
@@ -56,7 +57,15 @@ interface PendingMove {
   command: MoveCommand;
 }
 
-export function TeamDataProvider({ team: initialTeam, children }: { team: TeamInfo; children: ReactNode }) {
+export function TeamDataProvider({
+  team: initialTeam,
+  currentUserId,
+  children,
+}: {
+  team: TeamInfo;
+  currentUserId: string;
+  children: ReactNode;
+}) {
   const supabase = useMemo(() => getSupabaseBrowserClient(), []);
   const [team, setTeam] = useState(initialTeam);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
@@ -384,6 +393,7 @@ export function TeamDataProvider({ team: initialTeam, children }: { team: TeamIn
   const value = useMemo<TeamDataContextValue>(
     () => ({
       team,
+      currentUserId,
       canEdit,
       status,
       loadError,
@@ -405,6 +415,7 @@ export function TeamDataProvider({ team: initialTeam, children }: { team: TeamIn
     }),
     [
       team,
+      currentUserId,
       canEdit,
       status,
       loadError,
