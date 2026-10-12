@@ -1,27 +1,41 @@
+/* eslint-disable @next/next/no-img-element -- kleines statisches Logo, kein Bildproxy nötig */
 import { cn } from "@/lib/utils";
 
-export function BrandMark({ className }: { className?: string }) {
+/**
+ * Elitehandball-Logo (Original, public/elitehandball-logo.png, 640 × 317).
+ * Das „EH“-Monogramm ist weiß – das Logo nur auf dunklen Flächen verwenden.
+ */
+export function ElitehandballLogo({ className, decorative = true }: { className?: string; decorative?: boolean }) {
   return (
-    <svg viewBox="0 0 32 32" className={cn("size-8", className)} aria-hidden>
-      <rect x="1" y="1" width="30" height="30" rx="9" className="fill-sidebar-primary" />
-      <path
-        d="M7 9.5h18M9.5 9.5a6.5 6.5 0 0 0 13 0"
-        className="stroke-sidebar-primary-foreground"
-        strokeWidth="2.2"
-        fill="none"
-        strokeLinecap="round"
-      />
-      <circle cx="16" cy="21.5" r="3" className="fill-sidebar-primary-foreground" />
-    </svg>
+    <img
+      src="/elitehandball-logo.png"
+      width={640}
+      height={317}
+      alt={decorative ? "" : "Elitehandball"}
+      aria-hidden={decorative || undefined}
+      draggable={false}
+      className={cn("h-8 w-auto shrink-0 select-none", className)}
+    />
   );
 }
 
-export function BrandWordmark({ className }: { className?: string }) {
+/** „COURT IQ by Elitehandball“ – für dunkle Flächen (Navigation, Anmeldeseite). */
+export function BrandWordmark({ className, compact }: { className?: string; compact?: boolean }) {
   return (
-    <span className={cn("flex items-center gap-2.5", className)}>
-      <BrandMark />
-      <span className="text-[1.05rem] leading-none font-extrabold tracking-[0.14em]">
-        COURT<span className="text-sidebar-primary"> IQ</span>
+    <span className={cn("flex items-center gap-3", className)}>
+      <ElitehandballLogo className={compact ? "h-6" : "h-9"} decorative={false} />
+      <span className="flex flex-col leading-none">
+        <span className={cn("font-extrabold tracking-[0.14em] text-sidebar-foreground", compact ? "text-sm" : "text-[1.05rem]")}>
+          COURT<span className="text-sidebar-primary"> IQ</span>
+        </span>
+        <span
+          className={cn(
+            "mt-1 font-semibold tracking-[0.2em] text-sidebar-muted uppercase",
+            compact ? "text-[0.5rem]" : "text-[0.58rem]",
+          )}
+        >
+          by Elitehandball
+        </span>
       </span>
     </span>
   );

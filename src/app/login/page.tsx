@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Anmelden" };
 
 export default function LoginPage() {
   return (
-    <AuthFrame title="Willkommen bei COURT IQ" subtitle="Melde dich an oder lege ein Trainerkonto an.">
+    <AuthFrame title="Willkommen bei COURT IQ" subtitle="by Elitehandball · Melde dich an oder lege ein Trainerkonto an.">
       <Suspense>
         <LoginForm />
       </Suspense>

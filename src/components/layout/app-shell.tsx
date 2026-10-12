@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 import { Gauge, LayoutGrid, LogOut, Settings, Users, UserSquare2, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { GuardedLink } from "./guarded-link";
-import { BrandWordmark, BrandMark } from "./brand";
+import { BrandWordmark, ElitehandballLogo } from "./brand";
 import { useTeamData } from "@/components/providers/team-data-provider";
 import { ROLE_LABEL } from "@/lib/data/team";
 
@@ -95,7 +95,7 @@ export function AppShell({ displayName, children }: { displayName: string; child
         {/* Kopfzeile für Smartphone/Tablet hochkant */}
         <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b border-sidebar-border bg-sidebar px-4 text-sidebar-foreground lg:hidden">
           <span className="flex min-w-0 items-center gap-2.5">
-            <BrandMark className="size-7" />
+            <ElitehandballLogo className="h-6" decorative={false} />
             <span className="truncate text-sm font-semibold">{team.name}</span>
           </span>
           <form action="/auth/signout" method="post">

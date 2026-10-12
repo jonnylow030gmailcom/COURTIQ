@@ -11,8 +11,9 @@ const exo = Exo({
 });
 
 export const metadata: Metadata = {
-  title: { default: "COURT IQ", template: "%s · COURT IQ" },
-  description: "Mannschaft, Aufstellung und Spielerprofile für Handballtrainer:innen.",
+  title: { default: "COURT IQ by Elitehandball", template: "%s · COURT IQ by Elitehandball" },
+  description: "COURT IQ by Elitehandball – Mannschaft, Aufstellung und Spielerprofile für Handballtrainer:innen.",
+  applicationName: "COURT IQ by Elitehandball",
   robots: { index: false, follow: false },
 };
 

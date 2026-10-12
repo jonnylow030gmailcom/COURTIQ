@@ -25,8 +25,32 @@ const signUpSchema = z.object({
 
 type Mode = "signin" | "signup";
 
+interface AuthErrorInfo {
+  text: string;
+  /** Kurzer technischer Grund für die Fehlersuche (kein Stacktrace) */
+  detail: string;
+}
+
+function describeAuthError(error: unknown): AuthErrorInfo {
+  const e = (error ?? {}) as { name?: string; message?: string; status?: number; code?: string };
+  const message = e.message || String(error);
+  const parts = [e.name, e.status ? `HTTP ${e.status}` : null, e.code, message.slice(0, 120)].filter(Boolean);
+  console.error("[COURT IQ] Anmeldung fehlgeschlagen:", error);
+  return { text: authMessage(message), detail: parts.join(" · ") };
+}
+
+function AuthErrorBox({ error }: { error: AuthErrorInfo }) {
+  return (
+    <div role="alert" className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">
+      <p>{error.text}</p>
+      <p className="mt-1 text-xs break-words opacity-75">Technischer Hinweis: {error.detail}</p>
+    </div>
+  );
+}
+
 function authMessage(message: string): string {
   const m = message.toLowerCase();
+  if (m.includes("supabase ist nicht konfiguriert")) return "Die App ist noch nicht mit der Datenbank verbunden.";
   if (m.includes("invalid login credentials")) return "E-Mail oder Passwort ist falsch.";
   if (m.includes("email not confirmed")) return "Bitte zuerst die E-Mail-Adresse über den Link in der Bestätigungsmail bestätigen.";
   if (m.includes("already registered") || m.includes("already been registered")) return "Für diese E-Mail-Adresse gibt es bereits ein Konto.";
@@ -89,7 +113,7 @@ export function LoginForm() {
 function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<AuthErrorInfo | null>(null);
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: { email: "", password: "" },
@@ -98,9 +122,14 @@ function SignInForm() {
 
   const onSubmit = form.handleSubmit(async (values) => {
     setError(null);
-    const { error: authError } = await getSupabaseBrowserClient().auth.signInWithPassword(values);
-    if (authError) {
-      setError(authMessage(authError.message));
+    try {
+      const { error: authError } = await getSupabaseBrowserClient().auth.signInWithPassword(values);
+      if (authError) {
+        setError(describeAuthError(authError));
+        return;
+      }
+    } catch (unexpected) {
+      setError(describeAuthError(unexpected));
       return;
     }
     const next = searchParams.get("next");
@@ -116,11 +145,7 @@ function SignInForm() {
       <FormField id="password" label="Passwort" error={errors.password?.message}>
         <Input id="password" type="password" autoComplete="current-password" className="h-10" aria-invalid={!!errors.password} {...form.register("password")} />
       </FormField>
-      {error && (
-        <p role="alert" className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">
-          {error}
-        </p>
-      )}
+      {error && <AuthErrorBox error={error} />}
       <Button type="submit" size="lg" className="mt-2 h-11" disabled={isSubmitting}>
         {isSubmitting && <Loader2 className="animate-spin" />}
         Anmelden
@@ -131,7 +156,7 @@ function SignInForm() {
 
 function SignUpForm({ onConfirmationSent }: { onConfirmationSent: () => void }) {
   const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<AuthErrorInfo | null>(null);
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: { displayName: "", email: "", password: "" },
@@ -140,16 +165,23 @@ function SignUpForm({ onConfirmationSent }: { onConfirmationSent: () => void }) 
 
   const onSubmit = form.handleSubmit(async (values) => {
     setError(null);
-    const { data, error: authError } = await getSupabaseBrowserClient().auth.signUp({
-      email: values.email,
-      password: values.password,
-      options: {
-        data: { display_name: values.displayName },
-        emailRedirectTo: `${window.location.origin}/auth/confirm?next=/onboarding`,
-      },
-    });
+    let result: Awaited<ReturnType<ReturnType<typeof getSupabaseBrowserClient>["auth"]["signUp"]>>;
+    try {
+      result = await getSupabaseBrowserClient().auth.signUp({
+        email: values.email,
+        password: values.password,
+        options: {
+          data: { display_name: values.displayName },
+          emailRedirectTo: `${window.location.origin}/auth/confirm?next=/onboarding`,
+        },
+      });
+    } catch (unexpected) {
+      setError(describeAuthError(unexpected));
+      return;
+    }
+    const { data, error: authError } = result;
     if (authError) {
-      setError(authMessage(authError.message));
+      setError(describeAuthError(authError));
       return;
     }
     if (data.session) {
@@ -171,11 +203,7 @@ function SignUpForm({ onConfirmationSent }: { onConfirmationSent: () => void }) 
       <FormField id="su-password" label="Passwort" hint="Mindestens 8 Zeichen." error={errors.password?.message}>
         <Input id="su-password" type="password" autoComplete="new-password" className="h-10" aria-invalid={!!errors.password} {...form.register("password")} />
       </FormField>
-      {error && (
-        <p role="alert" className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">
-          {error}
-        </p>
-      )}
+      {error && <AuthErrorBox error={error} />}
       <Button type="submit" size="lg" className="mt-2 h-11" disabled={isSubmitting}>
         {isSubmitting && <Loader2 className="animate-spin" />}
         Konto anlegen

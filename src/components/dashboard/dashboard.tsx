@@ -51,7 +51,7 @@ export function Dashboard() {
         <PageHeader eyebrow={team.name} title="Dashboard" />
         <EmptyState
           icon={UserPlus}
-          title="Willkommen bei COURT IQ"
+          title="Willkommen bei COURT IQ by Elitehandball"
           description="Deine Mannschaft ist angelegt. Starte mit dem ersten Spieler – danach füllen sich Spielfeld, Teamliste und dieses Dashboard."
           action={<NewPlayerButton />}
         />
