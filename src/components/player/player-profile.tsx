@@ -35,7 +35,7 @@ import { EmptyState } from "@/components/layout/empty-state";
 import { useTeamData, type PhotoChange } from "@/components/providers/team-data-provider";
 import { useAssignmentFlow } from "@/components/court/use-assignment-flow";
 import { calculateAge, formatDate, formatDateTime, fullName } from "@/lib/domain/format";
-import { FIELD_POSITIONS, isFieldPositionCode, positionLabel } from "@/lib/domain/positions";
+import { FIELD_POSITIONS, positionLabel, primaryPositionText } from "@/lib/domain/positions";
 import { MOTIVATION, type MotivationStatus } from "@/lib/domain/motivation";
 import { THROWING_HAND_LABEL } from "@/lib/validation/player";
 import { toUserMessage } from "@/lib/data/errors";
@@ -205,7 +205,7 @@ function ProfileContent({
               {player.first_name} <span className="text-primary">{player.last_name}</span>
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              {isFieldPositionCode(player.primary_position) ? positionLabel(player.primary_position) : player.primary_position} · {locationText}
+              {primaryPositionText(player.primary_position)} · {locationText}
             </p>
             <div className="mt-3">
               <MotivationBadge status={status} />

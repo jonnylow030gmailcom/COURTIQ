@@ -174,9 +174,9 @@ export function PlayerForm({ player }: { player?: PlayerRow }) {
         </FormSection>
 
         <FormSection id="positionen" title="Positionen">
-          <FormField id="primary_position" label="Bevorzugte Position" required error={err("primary_position")}>
+          <FormField id="primary_position" label="Bevorzugte Position" hint="Kann offen bleiben, bis sie feststeht." error={err("primary_position")}>
             <NativeSelect id="primary_position" {...aria("primary_position")} {...register("primary_position")}>
-              <option value="">Bitte wählen…</option>
+              <option value="">Noch offen</option>
               {FIELD_POSITIONS.map((p) => (
                 <option key={p.code} value={p.code}>
                   {p.code} – {p.label}

@@ -13,7 +13,8 @@ export type PlayerRow = {
   last_name: string;
   birth_date: string | null;
   jersey_number: number | null;
-  primary_position: string;
+  /** null = Position noch offen */
+  primary_position: string | null;
   alternative_positions: string[];
   height_cm: number | null;
   throwing_hand: Database["public"]["Enums"]["throwing_hand"] | null;
@@ -34,8 +35,8 @@ export type PlayerRow = {
   motivation_assessed_at: string | null;
 } & Timestamps;
 
-type PlayerInsert = Partial<Omit<PlayerRow, "team_id" | "first_name" | "last_name" | "primary_position">> &
-  Pick<PlayerRow, "team_id" | "first_name" | "last_name" | "primary_position">;
+type PlayerInsert = Partial<Omit<PlayerRow, "team_id" | "first_name" | "last_name">> &
+  Pick<PlayerRow, "team_id" | "first_name" | "last_name">;
 
 export type Database = {
   public: {

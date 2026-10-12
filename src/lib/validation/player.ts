@@ -27,7 +27,7 @@ export const playerFormSchema = z.object({
     jersey_number: optionalIntString(0, 99, "Trikotnummer zwischen 0 und 99."),
     primary_position: z
       .string()
-      .refine((v) => (FIELD_POSITION_CODES as readonly string[]).includes(v), "Bitte eine Position wählen."),
+      .refine((v) => v === "" || (FIELD_POSITION_CODES as readonly string[]).includes(v), "Bitte eine gültige Position wählen."),
     alternative_positions: z.array(z.enum(FIELD_POSITION_CODES)),
     height_cm: optionalIntString(100, 230, "Größe zwischen 100 und 230 cm."),
     throwing_hand: z.enum(["", "left", "right", "both"]),
@@ -95,7 +95,7 @@ export function toPlayerPayload(values: PlayerFormValues): Required<
     last_name: values.last_name.trim(),
     birth_date: nullIfEmpty(values.birth_date),
     jersey_number: values.jersey_number.trim() === "" ? null : Number(values.jersey_number),
-    primary_position: values.primary_position,
+    primary_position: values.primary_position === "" ? null : values.primary_position,
     alternative_positions: values.alternative_positions.filter((p) => p !== values.primary_position),
     height_cm: values.height_cm.trim() === "" ? null : Number(values.height_cm),
     throwing_hand: values.throwing_hand === "" ? null : (values.throwing_hand as ThrowingHand),
@@ -122,7 +122,7 @@ export function toPlayerFormValues(player: PlayerRow): PlayerFormValues {
     last_name: player.last_name,
     birth_date: player.birth_date ?? "",
     jersey_number: player.jersey_number === null ? "" : String(player.jersey_number),
-    primary_position: player.primary_position,
+    primary_position: player.primary_position ?? "",
     alternative_positions: player.alternative_positions.filter((p): p is FieldPositionCode =>
       (FIELD_POSITION_CODES as readonly string[]).includes(p),
     ),

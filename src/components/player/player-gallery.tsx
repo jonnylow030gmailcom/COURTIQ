@@ -8,7 +8,7 @@ import { GuardedLink } from "@/components/layout/guarded-link";
 import { EmptyState } from "@/components/layout/empty-state";
 import { useTeamData } from "@/components/providers/team-data-provider";
 import { filterAndSortPlayers } from "@/lib/team/list";
-import { isFieldPositionCode, positionLabel } from "@/lib/domain/positions";
+import { primaryPositionText } from "@/lib/domain/positions";
 import type { MotivationStatus } from "@/lib/domain/motivation";
 import { PlayerAvatar } from "./player-avatar";
 import { MotivationBadge } from "./motivation-badge";
@@ -68,7 +68,7 @@ export function PlayerGallery() {
                     <p className="truncate text-sm text-muted-foreground">{player.first_name}</p>
                     <p className="truncate text-lg leading-tight font-bold">{player.last_name}</p>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      {isFieldPositionCode(player.primary_position) ? positionLabel(player.primary_position) : player.primary_position}
+                      {primaryPositionText(player.primary_position)}
                       {age !== null && ` · ${age} J.`}
                     </p>
                   </div>

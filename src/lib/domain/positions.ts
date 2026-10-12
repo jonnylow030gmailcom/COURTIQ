@@ -46,6 +46,12 @@ export function positionLabel(code: FieldPositionCode): string {
   return getFieldPosition(code).label;
 }
 
+/** Anzeigetext einer (ggf. noch offenen) Hauptposition. */
+export function primaryPositionText(code: string | null | undefined): string {
+  if (!code) return "Position offen";
+  return isFieldPositionCode(code) ? positionLabel(code) : code;
+}
+
 /** Feste Reihenfolge für Sortierung und Listen (Torwart, dann von links nach rechts). */
 export const POSITION_SORT_ORDER: Record<FieldPositionCode, number> = {
   TW: 0,

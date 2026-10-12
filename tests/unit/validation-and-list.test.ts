@@ -23,11 +23,15 @@ describe("playerFormSchema", () => {
     expect(playerFormSchema.safeParse(valid).success).toBe(true);
   });
 
-  it("verlangt Vorname, Nachname und Position", () => {
+  it("verlangt Vor- und Nachname, die Position darf offen bleiben", () => {
     const result = playerFormSchema.safeParse(EMPTY_PLAYER_FORM);
     expect(result.success).toBe(false);
     const fields = result.error!.issues.map((i) => i.path[0]);
-    expect(fields).toEqual(expect.arrayContaining(["first_name", "last_name", "primary_position"]));
+    expect(fields).toEqual(expect.arrayContaining(["first_name", "last_name"]));
+    expect(fields).not.toContain("primary_position");
+    const open = playerFormSchema.safeParse({ ...valid, primary_position: "" });
+    expect(open.success).toBe(true);
+    expect(toPlayerPayload({ ...valid, primary_position: "" }).primary_position).toBeNull();
   });
 
   it("lehnt ungültige Zahlen und Zukunftsdaten ab", () => {
