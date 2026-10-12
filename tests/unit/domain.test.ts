@@ -4,6 +4,16 @@ import { COURT, COURT_VIEWBOX, GOAL_POST_LEFT, GOAL_POST_RIGHT, toViewboxPercent
 import { FIELD_POSITIONS, FIELD_POSITION_CODES } from "@/lib/domain/positions";
 import { MOTIVATION, MOTIVATION_STATUSES } from "@/lib/domain/motivation";
 import { rowsToLineupState } from "@/lib/data/lineup";
+import { cleanEnvValue } from "@/lib/supabase/env";
+
+describe("cleanEnvValue", () => {
+  it("entfernt BOM, Zero-Width-Zeichen und Leerraum", () => {
+    expect(cleanEnvValue("﻿https://x.supabase.co\r\n")).toBe("https://x.supabase.co");
+    expect(cleanEnvValue(" sb_publishable_abc​ ")).toBe("sb_publishable_abc");
+    expect(cleanEnvValue("﻿")).toBeUndefined();
+    expect(cleanEnvValue(undefined)).toBeUndefined();
+  });
+});
 
 describe("calculateAge", () => {
   const today = new Date(2026, 9, 12); // 12.10.2026
