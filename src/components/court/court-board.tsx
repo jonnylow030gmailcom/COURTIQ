@@ -169,6 +169,8 @@ export function CourtBoard() {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onDragCancel={() => setActivePlayerId(null)}
+      // Nur ganz am Rand automatisch scrollen – sonst rutschen die oberen Positionen beim Ziehen weg.
+      autoScroll={{ threshold: { x: 0, y: 0.08 }, acceleration: 6 }}
       accessibility={{
         announcements,
         screenReaderInstructions: {
@@ -389,7 +391,7 @@ function FieldSlot({
         >
           <span
             className={cn(
-              "flex items-center justify-center rounded-full border-2 border-dashed border-court-line/55 bg-court-line/[0.07] text-court-line backdrop-blur-[2px] transition-all duration-150",
+              "flex items-center justify-center rounded-full border-2 border-dashed border-court-line/55 bg-[color-mix(in_oklch,var(--court-floor)_88%,var(--court-line))] text-court-line transition-all duration-150",
               canEdit && "group-hover/slot:scale-105 group-hover/slot:border-primary group-hover/slot:bg-primary/20 group-hover/slot:text-primary",
               "group-focus-visible/slot:ring-4 group-focus-visible/slot:ring-primary",
               isOver && "scale-110 border-primary bg-primary/25 text-primary",
@@ -401,7 +403,8 @@ function FieldSlot({
               {canEdit && <Plus className="mt-0.5 size-[calc(var(--token-size)*0.24)] opacity-80" aria-hidden />}
             </span>
           </span>
-          <span className="rounded-md bg-sidebar/70 px-1.5 py-0.5 text-[0.68rem] font-semibold text-sidebar-muted">
+          {/* Auf kleinen Feldern reicht das Kürzel im Punkt – sonst überlappen die Beschriftungen */}
+          <span className="rounded-md bg-sidebar/70 px-1.5 py-0.5 text-[0.68rem] font-semibold whitespace-nowrap text-sidebar-muted @max-md:hidden">
             {position.label}
           </span>
         </button>

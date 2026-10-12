@@ -220,5 +220,21 @@ In Handballmannschaften spielen oft **Minderjährige**. Die Technik ist darauf a
 - **Passwort vergessen** und **Einladungs-Mails** gibt es noch nicht. Mitglieder werden über die E-Mail eines bestehenden Kontos hinzugefügt.
 - Pro Konto wird die **erste** Mannschaft verwendet. Das Datenmodell unterstützt mehrere Mannschaften, Aufstellungen und Trainer:innen; ein Teamwechsler in der Oberfläche fehlt noch.
 - Wer gleichzeitig mit einem anderen Gerät dasselbe Spielerprofil bearbeitet, überschreibt dessen Änderungen („last write wins“). Für die Aufstellung gilt das nicht, dort sorgt die Zeilensperre für Konsistenz.
-- **End-to-End-Tests im Browser** (Playwright) sind noch nicht eingerichtet. Die zentralen Abläufe decken die Unit- und Integrationstests ab. Die Bedienung im Browser mit echter Datenbank (inkl. Tablet-Ansicht) steht noch aus.
+- **Automatisierte End-to-End-Tests im Browser** (Playwright) sind noch nicht eingerichtet. Am 12.10.2026 wurden die zentralen Abläufe manuell im Browser gegen die echte Datenbank geprüft, mit einem Testkonto, das danach wieder gelöscht wurde. Geprüft wurden:
+  - Anmeldung und Mannschaft anlegen
+  - leeres Dashboard
+  - Pflichtfeld-Prüfung, Spieler anlegen, bearbeiten und löschen
+  - Fehlermeldung bei doppelter Trikotnummer
+  - Foto hochladen (verkleinert, privat, öffentlich nicht abrufbar) und Entfernen der Datei beim Löschen
+  - Motivation ändern
+  - Zuordnen per Dialog mit Suche
+  - Drag-and-drop von „Nicht eingeteilt“ zur Bank, von der Bank auf das Feld und Tausch auf dem Feld
+  - Feld → Bank per Tastatur
+  - Rückfrage bei besetzter Position
+  - Rücknahme der Anzeige bei Netzwerkfehler
+  - Daten nach dem Neuladen noch vorhanden
+  - Teamliste mit Filter und Suche
+  - Smartphone-Ansicht
+  - RLS: Eine fremde angemeldete Person sieht und ändert nichts, auch nicht über `move_player`.
+- Der Supabase-Advisor warnt, dass `create_team`, `add_team_member`, `set_member_role` und `move_player` als `SECURITY DEFINER` für angemeldete Nutzer:innen aufrufbar sind. Das ist beabsichtigt: Jede Funktion prüft die Berechtigung selbst über `team_members`.
 - `next.config.ts`: `cacheComponents` ist **aus**. Alle Seiten sind personalisiert, die Daten kommen über Supabase im Client mit Echtzeit-Abgleich. Das vermeidet Suspense-Pflichten für jede Seite mit Anmeldung.
