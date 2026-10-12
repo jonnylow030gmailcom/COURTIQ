@@ -30,8 +30,13 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files – Zugangsdaten niemals einchecken
 .env*
+!.env.example
+
+# supabase cli
+supabase/.temp
+supabase/.branches
 
 # vercel
 .vercel
